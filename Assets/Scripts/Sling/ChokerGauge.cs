@@ -56,8 +56,7 @@ public class ChokerGauge : MonoBehaviour
             yellowFill.fillAmount = currentYellow;
             redFill.fillAmount = currentRed;
 
-            float highest = Mathf.Max(currentGreen, currentYellow, currentRed);
-            percentageText.text = Mathf.RoundToInt(highest * 100f) + "%";
+            percentageText.text = Mathf.RoundToInt(currentGreen * 100f) + "%";
 
             yield return null;
         }

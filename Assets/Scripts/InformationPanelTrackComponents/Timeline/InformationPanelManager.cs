@@ -11,9 +11,8 @@ public class InformationPanelManager : MonoBehaviour
     public TextMeshProUGUI headerText;
     public TextMeshProUGUI contentText;
     public Button nextButton;
-    public Button prevButton;
+ 
     public TextMeshProUGUI nextButtonText;
-    public TextMeshProUGUI prevButtonText;
 
     /*public ContentSizeFitter _nextButtonCSF;
     public ContentSizeFitter _prevButtonCSF;*/
@@ -26,31 +25,17 @@ public class InformationPanelManager : MonoBehaviour
 
     private void Start()
     {
-       /* _nextButtonCSF = nextButton.GetComponent<ContentSizeFitter>();
-        _prevButtonCSF = prevButton.GetComponent<ContentSizeFitter>();*/
-       /* if (!voiceController)
-        {
-            voiceController = FindFirstObjectByType<VoiceController>();
-            if (!voiceController)
-            {
-                Debug.LogWarning("[InformationPanelManager] Failed to get VoiceController");
-            }
-        }
-
-        SettingsManager.instance.OnLanguageSelection += UpdateLanguage;*/
         if (endModuleButtton != null) endModuleButtton.onClick.AddListener(StopInfoText);
 
         gameObject.SetActive(false);
     }
     private void OnDestroy()
     {
-       // SettingsManager.instance.OnLanguageSelection -= UpdateLanguage;
         if (endModuleButtton != null) endModuleButtton.onClick.RemoveListener(StopInfoText);
     }
 
     private void OnEnable()
     {
-      //  UpdateLanguage(SettingsManager.instance.IsHindiSelected);
     }
 
 
@@ -58,30 +43,15 @@ public class InformationPanelManager : MonoBehaviour
         string steps, string header, string content, string hindiHeader, string hindiContent,
         string nextText = "Next", string prevText = "Prev", bool prevButtonEnabled = true, bool nextButtonEnabled = true, float buttonVisibilityDelay = 0)
     {
-        // buttonsHolder.SetActive(false);
         stepsText.text = steps;
         engHeaderText = header;
         engContentText = content;
         hinHeaderText = hindiHeader;
         hinContentText = hindiContent;
         ChangeText();
-        // nextButton.gameObject.SetActive(showButtons);
-        // prevButton.gameObject.SetActive(showButtons);
-       /* if (_nextButtonCSF)
-            _nextButtonCSF.horizontalFit = ContentSizeFitter.FitMode.MinSize;
-        if (_prevButtonCSF)
-            _prevButtonCSF.horizontalFit = ContentSizeFitter.FitMode.MinSize;*/
         nextButtonText.text = nextText;
-        prevButtonText.text = prevText;
-        //if (showButtons)
-        //{
-        //    nextButtonText.text = nextText;
-        //    prevButtonText.text = prevText;
-        //}
-        prevButton.gameObject.SetActive(prevButtonEnabled);
-        nextButton.gameObject.SetActive(nextButtonEnabled);
 
-        // Invoke(nameof(ShowButtonWithDelay), buttonVisibilityDelay);
+        nextButton.gameObject.SetActive(nextButtonEnabled);
         PlayInfoText();
     }
 
@@ -95,7 +65,26 @@ public class InformationPanelManager : MonoBehaviour
         hinContentText = "";
         ChangeText();
     }
+    public void OnNextClicked()
+    {
+        Debug.Log("Next Button Clicked");
 
+        if (TimelineFlowManager.Instance == null)
+        {
+            Debug.LogError("TimelineFlowManager is NULL");
+            return;
+        }
+
+        if (TimelineFlowManager.Instance.IsFinished())
+        {
+            Debug.Log("Timeline already finished");
+            nextButton.interactable = false;
+            return;
+        }
+
+        Debug.Log("Resuming Timeline");
+        TimelineFlowManager.Instance.Resume();
+    }
     public void ShowButtonWithDelay(float t)
     {
         if (t >= 0f && t <= 1f)
@@ -111,7 +100,6 @@ public class InformationPanelManager : MonoBehaviour
     void showButton()
     {
         buttonsHolder.SetActive(true);
-       // UIUtility.RebuildLayoutsRecursivelyWithDelay(this, gameObject, 0.1f);
     }
 
     public void PlayInfoText(bool force = false)

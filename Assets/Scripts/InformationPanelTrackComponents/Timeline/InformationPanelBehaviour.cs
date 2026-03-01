@@ -48,6 +48,7 @@ public class InformationPanelBehaviour : PlayableBehaviour
                 buttonVisibilityDelay: buttonDelay
             );
             infoPanel.ShowButtonWithDelay(buttonDelay);
+
         }
     }
 }
