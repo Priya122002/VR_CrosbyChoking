@@ -136,7 +136,7 @@
 *.apk                   lfs
 *.unitypackage          lfs
 
-
+git lfs track "*.unity"
 # Generated / Noise (hide from GitHub diffs)
 
 Assets/Plugins/**           linguist-generated
